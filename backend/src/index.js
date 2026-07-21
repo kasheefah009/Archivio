@@ -10,7 +10,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 const corsOptions = {
-    origin: "https://archivio-git-main-kasheefah-s-projects.vercel.app/",
+    origin: "https://archivio-objltntk0-kasheefah-s-projects.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
@@ -20,6 +20,9 @@ app.use(cors(corsOptions))
 
 app.use(express.json())
 app.use(cookieParser())
+app.get("/", (req, res) => {
+    res.json({ message: "Welcome to the Archivio API, designed for Archivio users" });
+});
 app.use("/api", userRoute)
 const start = async () => {
     const uri = process.env.MONGODB_URI

@@ -18,12 +18,6 @@ function formatUser(user) {
     };
 }
 
-export const getHomePage = async (req, res) => {
-    res.status(200).json({
-        message: "Welcome to the Gensler API, designed for Gensler users"
-    })
-}
-
 export const registerUser = async (req, res) => {
 
     const { username, email, password } = req.body

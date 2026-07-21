@@ -1,6 +1,5 @@
 import { Router } from "express"
 import {
-    getHomePage,
     registerUser,
     loginUser,
     getProfile,
@@ -16,7 +15,6 @@ import {
 import { checkToken } from "../middleware/userMiddleware.js"
 
 const userRoute = Router()
-userRoute.get("/", getHomePage)
 userRoute.post("/signup", registerUser)
 userRoute.post("/login", loginUser)
 userRoute.post("/logout", logoutUser);
