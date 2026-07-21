@@ -10,7 +10,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 const corsOptions = {
-    origin: "https://archivio-objltntk0-kasheefah-s-projects.vercel.app",
+    origin: "https://archivio-tan.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
