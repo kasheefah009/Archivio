@@ -3,18 +3,14 @@ import userRoute from "./routes/userRoute.js"
 import { connectDB } from "./config/db.js"
 import cookieParser from "cookie-parser"
 import cors from "cors"
-import path from "path";
-import { fileURLToPath } from "url";
 import dotenv from "dotenv"
 dotenv.config()
 
 const app = express()
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000
 
 const corsOptions = {
-    origin: "http://archivio-lmx39fcrb-kasheefah-s-projects.vercel.app/",
+    origin: "http://localhost:5173",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
@@ -25,7 +21,6 @@ app.use(cors(corsOptions))
 app.use(express.json())
 app.use(cookieParser())
 app.use("/api", userRoute)
-app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 const start = async () => {
     const uri = process.env.MONGODB_URI
     if (!uri || uri.includes("<db_password>")) {

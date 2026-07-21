@@ -14,7 +14,6 @@ function formatUser(user) {
         location: user.location,
         website: user.website,
         interests: user.interests,
-        avatar: user.avatarUrl,
         createdAt: user.createdAt,
     };
 }
@@ -335,8 +334,7 @@ export const updateProfile = async (req, res) => {
         if (role) user.role = role;
         if (location !== undefined) user.location = location;
         if (website !== undefined) user.website = website;
-        if (interests) user.interests = JSON.parse(interests);
-        if (req.file) user.avatarUrl = `/uploads/avatars/${req.file.filename}`;
+        if (interests) user.interests = interests;
 
         await user.save();
 

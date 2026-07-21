@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import AccessDeniedGate from "../components/AccessDeniedGate";
 import { userStore } from "../store/useStore";
-import { getAssetUrl } from "../utils/getAssetUrl";
+import { getAvatarUrl } from "../utils/getAvatarUrl";
 import {
   User,
   Bell,
@@ -609,9 +609,9 @@ export default function Settings() {
                 <>
                   <div className="mb-8 flex items-center gap-5">
                     <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[#1c1917] text-2xl font-medium text-stone-300">
-                      {user?.avatar ? (
+                      {user?._id ? (
                         <img
-                          src={getAssetUrl(user.avatar) || "https://picsum.photos/seed/archivio-portrait/500/625"}
+                          src={getAvatarUrl(user._id)}
                           alt={user.username}
                           className="h-full w-full object-cover"
                         />
@@ -631,21 +631,13 @@ export default function Settings() {
                   <EditableRow
                     label="Name"
                     value={user?.username}
-                    onSave={(v) => {
-                      const formData = new FormData();
-                      formData.append("username", v);
-                      return updateProfile(formData);
-                    }}
+                    onSave={(v) => updateProfile({ username: v })}
                   />
                   <EditableRow
                     label="Email address"
                     value={user?.email}
                     type="email"
-                    onSave={(v) => {
-                      const formData = new FormData();
-                      formData.append("email", v);
-                      return updateProfile(formData);
-                    }}
+                    onSave={(v) => updateProfile({ email: v })}
                   />
                   <PasswordRow onChangePassword={(payload) => changePassword(payload)} />
 

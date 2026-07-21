@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { userStore } from "../store/useStore";
-import { getAssetUrl } from "../utils/getAssetUrl";
+import { getAvatarUrl } from "../utils/getAvatarUrl";
 import {
     Search,
     X,
@@ -232,7 +232,7 @@ function ProfileMenu({ user, onLogout }) {
                 aria-expanded={open}
             >
                 <img
-                    src={getAssetUrl(user.avatar) || "https://picsum.photos/seed/archivio-portrait/500/625"}
+                    src={getAvatarUrl(user._id) || "https://picsum.photos/seed/archivio-portrait/500/625"}
                     alt={user.name}
                     className="h-8 w-8 rounded-full object-cover"
                 />

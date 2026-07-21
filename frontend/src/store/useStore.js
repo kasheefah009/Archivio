@@ -144,9 +144,9 @@ export const userStore = create((set) => ({
     },
 
 
-    updateProfile: async (formData) => {
+    updateProfile: async (profileData) => {
         try {
-            const response = await api.put("/profile", formData);
+            const response = await api.put("/profile", profileData);
             set({ user: response.data.data });
             showSuccess("Profile updated", "Your changes are saved.")
             return response.data.data;

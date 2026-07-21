@@ -1,10 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import AccessDeniedGate from "../components/AccessDeniedGate";
 import { MapPin, Calendar, Play, X, Pencil, Compass } from "lucide-react";
 import { userStore } from "../store/useStore";
-import { getAssetUrl } from "../utils/getAssetUrl";
+import { getAvatarUrl } from "../utils/getAvatarUrl";
 import EditProfile from "../components/EditProfile";
 
 const FEED = [
@@ -181,7 +181,7 @@ export default function Dashboard() {
             ? `Member since ${new Date(rawUser.createdAt).toLocaleString("en-US", { month: "short", year: "numeric" })}`
             : null,
         bio: rawUser?.bio || null,
-        avatar: rawUser?.avatar || null,
+        avatar: getAvatarUrl(rawUser?._id),
         stats: [
             { label: "Saved", value: rawUser?.savedCount ?? 0 },
             { label: "Boards", value: rawUser?.boardsCount ?? 0 },
@@ -226,7 +226,7 @@ export default function Dashboard() {
                             <div className="absolute -bottom-3 -right-3 h-full w-full rounded-2xl border-2 border-orange-700/40" />
                             <div className="relative aspect-[4/5] overflow-hidden rounded-2xl border border-white/10">
                                 <img
-                                    src={getAssetUrl(user.avatar) || "https://picsum.photos/seed/archivio-portrait/500/625"}
+                                    src={user.avatar || "https://picsum.photos/seed/archivio-portrait/500/625"}
                                     alt={user.name}
                                     className="h-full w-full object-cover"
                                 />

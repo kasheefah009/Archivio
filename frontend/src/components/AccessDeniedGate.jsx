@@ -15,7 +15,7 @@ export default function AccessDeniedGate({ children }) {
                 </div>
                 <h1 className="font-serif text-2xl text-stone-50">Access Denied</h1>
                 <p className="mt-2.5 text-sm leading-relaxed text-stone-400">
-                    You must be logged in to view your account options.
+                    You must be logged in to view this page.
                 </p>
                 <Link
                     to="/login"

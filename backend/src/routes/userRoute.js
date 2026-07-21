@@ -14,7 +14,6 @@ import {
     changePassword
 } from "../controllers/userController.js"
 import { checkToken } from "../middleware/userMiddleware.js"
-import { upload } from "../middleware/upload.js"
 
 const userRoute = Router()
 userRoute.get("/", getHomePage)
@@ -27,7 +26,7 @@ userRoute.post("/forgot-password", forgotPassword)
 userRoute.post("/verify-otp", verifyOtp)
 userRoute.post("/reset-password", resetPassword)
 userRoute.delete("/profile/delete", checkToken, deleteProfile)
-userRoute.put("/profile", checkToken, upload.single("avatar"), updateProfile)
+userRoute.put("/profile", checkToken, updateProfile)
 userRoute.put("/profile/password", checkToken, changePassword)
 
 export default userRoute;
