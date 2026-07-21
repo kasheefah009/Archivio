@@ -14,7 +14,7 @@ const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000
 
 const corsOptions = {
-    origin: "http://localhost:5173",
+    origin: "http://archivio-lmx39fcrb-kasheefah-s-projects.vercel.app/",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true
