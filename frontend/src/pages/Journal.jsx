@@ -531,6 +531,7 @@ function ArticleModal({ article, onClose }) {
 
     return (
         <div className="fixed inset-0 z-50 flex items-start justify-center overflow-y-auto px-4 py-8 sm:py-14" onClick={onClose}>
+            <div className="absolute inset-0 bg-black/70 backdrop-blur-lg" />
             <div
                 className="relative z-10 w-full max-w-2xl overflow-hidden rounded-3xl border border-white/10 bg-[#141210] shadow-[0_30px_80px_rgba(0,0,0,0.55)]"
                 style={{ animation: "articleModalIn 0.35s ease-out" }}
