@@ -34,73 +34,6 @@ import {
 import { userStore } from "../store/useStore";
 
 
-function Reveal({ children, delay = 0, className = "" }) {
-    const ref = useRef(null);
-    const [visible, setVisible] = useState(false);
-
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const io = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting) {
-                    setVisible(true);
-                    io.disconnect();
-                }
-            },
-            { threshold: 0.2 }
-        );
-        io.observe(el);
-        return () => io.disconnect();
-    }, []);
-
-    return (
-        <div
-            ref={ref}
-            className={`transition-all duration-500 ease-out ${className}`}
-            style={{
-                transitionDelay: `${delay}ms`,
-                opacity: visible ? 1 : 0,
-                transform: visible ? "translateY(0)" : "translateY(14px)",
-            }}
-        >
-            {children}
-        </div>
-    );
-}
-
-function Counter({ target, duration = 1400 }) {
-    const [value, setValue] = useState(0);
-    const ref = useRef(null);
-    const started = useRef(false);
-
-    useEffect(() => {
-        const el = ref.current;
-        if (!el) return;
-        const io = new IntersectionObserver(
-            ([entry]) => {
-                if (entry.isIntersecting && !started.current) {
-                    started.current = true;
-                    let start = null;
-                    let frame;
-                    const step = (ts) => {
-                        if (start === null) start = ts;
-                        const progress = Math.min((ts - start) / duration, 1);
-                        setValue(Math.round(progress * target));
-                        if (progress < 1) frame = requestAnimationFrame(step);
-                    };
-                    frame = requestAnimationFrame(step);
-                }
-            },
-            { threshold: 0.4 }
-        );
-        io.observe(el);
-        return () => io.disconnect();
-    }, [target, duration]);
-
-    return <span ref={ref}>{value.toLocaleString()}</span>;
-}
-
 
 const BADGE_MESSAGES = [
     { text: "Loved by architects", icons: [Compass, Users, Heart] },
@@ -246,80 +179,49 @@ function TrustStrip() {
     );
 }
 
-function StatsRow() {
-    const stats = [
-        { value: 12400, suffix: "+", label: "Members worldwide" },
-        { value: 340, suffix: "", label: "Curated collections" },
-        { value: 1200, suffix: "+", label: "Projects archived" },
-        { value: 58, suffix: "", label: "Countries represented" },
-    ];
-    return (
-        <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10 lg:display-none">
-            <div className="grid grid-cols-2 place-items-center gap-8 sm:grid-cols-4">
-                {stats.map((s) => (
-                    <Reveal key={s.label}>
-                        <div className="text-center sm:text-left">
-                            <p className="font-serif text-4xl text-stone-50 sm:text-5xl">
-                                <Counter target={s.value} />
-                                {s.suffix}
-                            </p>
-                            <p className="mt-1.5 text-xs text-stone-500">{s.label}</p>
-                        </div>
-                    </Reveal>
-                ))}
-            </div>
-        </section>
-    );
-}
 
 function FeatureBento() {
     return (
         <section className="mx-auto max-w-7xl px-6 py-10 lg:px-10">
-            <Reveal>
-                <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-orange-500">
-                    What Archivio Is
-                </p>
-                <h2 className="max-w-lg font-serif text-4xl text-stone-50">
-                    One place for everything you love about architecture.
-                </h2>
-            </Reveal>
+            <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-orange-500">
+                What Archivio Is
+            </p>
+            <h2 className="max-w-lg font-serif text-4xl text-stone-50">
+                One place for everything you love about architecture.
+            </h2>
 
             <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2">
-                <Reveal delay={80}>
-                    <div className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-[#1c1917] transition hover:border-orange-600/30">
-                        <div className="h-48 overflow-hidden">
-                            <img src="/images/Home/Discover.jpg" alt="" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                        </div>
-                        <div className="p-6">
-                            <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-orange-700/15 text-orange-500">
-                                <Compass size={17} />
-                            </span>
-                            <h3 className="font-serif text-xl text-stone-50">Discover</h3>
-                            <p className="mt-2 text-sm leading-relaxed text-stone-400">
-                                Browse an ever-growing archive organized the way architects
-                                actually think by material, by mood, by typology.
-                            </p>
-                        </div>
+                <div className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-[#1c1917] transition hover:border-orange-600/30">
+                    <div className="h-48 overflow-hidden">
+                        <img src="/images/Home/Discover.jpg" alt="" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                     </div>
-                </Reveal>
+                    <div className="p-6">
+                        <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-orange-700/15 text-orange-500">
+                            <Compass size={17} />
+                        </span>
+                        <h3 className="font-serif text-xl text-stone-50">Discover</h3>
+                        <p className="mt-2 text-sm leading-relaxed text-stone-400">
+                            Browse an ever-growing archive organized the way architects
+                            actually think by material, by mood, by typology.
+                        </p>
+                    </div>
+                </div>
 
-                <Reveal delay={160}>
-                    <div className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-[#1c1917] transition hover:border-orange-600/30">
-                        <div className="h-48 overflow-hidden">
-                            <img src="/images/Home/Connect.jpg" alt="" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
-                        </div>
-                        <div className="p-6">
-                            <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-orange-700/15 text-orange-500">
-                                <Users size={17} />
-                            </span>
-                            <h3 className="font-serif text-xl text-stone-50">Connect</h3>
-                            <p className="mt-2 text-sm leading-relaxed text-stone-400">
-                                Meet working architects and aspiring ones in the same place.
-                                Ask questions. Get answers from people who've actually done it.
-                            </p>
-                        </div>
+                <div className="group h-full overflow-hidden rounded-2xl border border-white/10 bg-[#1c1917] transition hover:border-orange-600/30">
+                    <div className="h-48 overflow-hidden">
+                        <img src="/images/Home/Connect.jpg" alt="" className="h-full w-full object-cover transition duration-700 group-hover:scale-105" />
                     </div>
-                </Reveal>
+                    <div className="p-6">
+                        <span className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-orange-700/15 text-orange-500">
+                            <Users size={17} />
+                        </span>
+                        <h3 className="font-serif text-xl text-stone-50">Connect</h3>
+                        <p className="mt-2 text-sm leading-relaxed text-stone-400">
+                            Meet working architects and aspiring ones in the same place.
+                            Ask questions. Get answers from people who've actually done it.
+                        </p>
+                    </div>
+                </div>
             </div>
 
             <div className="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-3">
@@ -328,15 +230,13 @@ function FeatureBento() {
                     { icon: Sparkles, title: "Curated by people", desc: "Assembled by our team, not an algorithm.", seed: "feat-curated" },
                     { icon: ShieldCheck, title: "Your boards, private", desc: "Public by default doesn't mean it has to be.", seed: "feat-privacy" },
                 ].map(({ icon: Icon, title, desc, seed }, i) => (
-                    <Reveal key={title} delay={i * 100}>
-                        <div className="h-full rounded-2xl border border-white/10 bg-[#1c1917] p-6 transition hover:border-orange-600/30">
-                            <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-orange-700/15 text-orange-500">
-                                <Icon size={15} />
-                            </span>
-                            <h3 className="text-base font-medium text-stone-100">{title}</h3>
-                            <p className="mt-1.5 text-xs leading-relaxed text-stone-500">{desc}</p>
-                        </div>
-                    </Reveal>
+                    <div key={title} className="h-full rounded-2xl border border-white/10 bg-[#1c1917] p-6 transition hover:border-orange-600/30">
+                        <span className="mb-3 flex h-9 w-9 items-center justify-center rounded-full bg-orange-700/15 text-orange-500">
+                            <Icon size={15} />
+                        </span>
+                        <h3 className="text-base font-medium text-stone-100">{title}</h3>
+                        <p className="mt-1.5 text-xs leading-relaxed text-stone-500">{desc}</p>
+                    </div>
                 ))}
             </div>
         </section>
@@ -443,7 +343,7 @@ function ChaosSection() {
     return (
         <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
             <div className="grid grid-cols-1 items-center gap-12 rounded-3xl border border-white/10 bg-[#1c1917] p-8 sm:p-14 lg:grid-cols-2">
-                <Reveal>
+                <div>
                     <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-orange-500">
                         Before Archivio
                     </p>
@@ -462,29 +362,27 @@ function ChaosSection() {
                     >
                         Start organizing
                     </Link>
-                </Reveal>
+                </div>
 
-                <Reveal delay={120}>
-                    <div className="grid grid-cols-3 gap-3">
+                <div className="grid grid-cols-3 gap-3">
 
-                        {[
-                            "/images/Home/chaos1.jpg",
-                            "/images/Home/chaos2.jpg",
-                            "/images/Home/chaos3.jpg",
-                            "/images/Home/chaos4.jpg",
-                            "/images/Home/chaos5.jpg",
-                            "/images/Home/chaos6.jpg",
-                        ].map((src, i) => (
-                            <div
-                                key={src}
-                                className="aspect-square overflow-hidden rounded-xl border border-white/10"
-                                style={{ transform: `rotate(${(i % 2 === 0 ? -1 : 1) * (2 + i)}deg)` }}
-                            >
-                                <img src={src} alt="" className="h-full w-full object-cover opacity-70" />
-                            </div>
-                        ))}
-                    </div>
-                </Reveal>
+                    {[
+                        "/images/Home/chaos1.jpg",
+                        "/images/Home/chaos2.jpg",
+                        "/images/Home/chaos3.jpg",
+                        "/images/Home/chaos4.jpg",
+                        "/images/Home/chaos5.jpg",
+                        "/images/Home/chaos6.jpg",
+                    ].map((src, i) => (
+                        <div
+                            key={src}
+                            className="aspect-square overflow-hidden rounded-xl border border-white/10"
+                            style={{ transform: `rotate(${(i % 2 === 0 ? -1 : 1) * (2 + i)}deg)` }}
+                        >
+                            <img src={src} alt="" className="h-full w-full object-cover opacity-70" />
+                        </div>
+                    ))}
+                </div>
             </div>
         </section>
     );
@@ -661,21 +559,17 @@ function ReceiptsGrid() {
 
     return (
         <section className="mx-auto max-w-7xl px-6 py-16 lg:px-10">
-            <Reveal>
-                <h2 className="mb-10 text-center font-serif text-3xl text-stone-50">
-                    People seem to like it here.
-                </h2>
-            </Reveal>
+            <h2 className="mb-10 text-center font-serif text-3xl text-stone-50">
+                People seem to like it here.
+            </h2>
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 {quotes.map((q, i) => (
-                    <Reveal key={q.name} delay={(i % 3) * 80}>
-                        <div className="h-full rounded-2xl border border-white/10 bg-[#1c1917] p-5">
-                            <p className="text-sm leading-relaxed text-stone-300">&ldquo;{q.text}&rdquo;</p>
-                            <p className="mt-4 text-xs text-stone-500">
-                                <span className="text-stone-300">{q.name}</span> &middot; {q.role}
-                            </p>
-                        </div>
-                    </Reveal>
+                    <div key={q.name} className="h-full rounded-2xl border border-white/10 bg-[#1c1917] p-5">
+                        <p className="text-sm leading-relaxed text-stone-300">&ldquo;{q.text}&rdquo;</p>
+                        <p className="mt-4 text-xs text-stone-500">
+                            <span className="text-stone-300">{q.name}</span> &middot; {q.role}
+                        </p>
+                    </div>
                 ))}
             </div>
         </section>
@@ -756,7 +650,6 @@ export default function Home() {
 
             <Hero />
             <TrustStrip />
-            <StatsRow />
             <FeatureBento />
             <SpotlightCarousel />
             <PillarsSection />
