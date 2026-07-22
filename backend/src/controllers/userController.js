@@ -18,6 +18,21 @@ function formatUser(user) {
     };
 }
 
+const isProd = process.env.NODE_ENV === "production";
+
+const cookieOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+};
+
+const clearCookieOptions = {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax",
+};
+
 export const registerUser = async (req, res) => {
 
     const { username, email, password } = req.body
@@ -36,8 +51,7 @@ export const registerUser = async (req, res) => {
         const existingUser = await userModel.findOne({ email })
         if (existingUser) {
             return res.status(400).json({
-                message: "User already exist, please login instead.",
-                data: existingUser
+                message: "User already exist, please login instead."
             })
         }
 
@@ -49,12 +63,7 @@ export const registerUser = async (req, res) => {
 
         const token = await generateToken(newUser._id)
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        })
+        res.cookie("token", token, cookieOptions)
 
         return res.status(201).json({
             message: "User created successfully!",
@@ -62,7 +71,7 @@ export const registerUser = async (req, res) => {
         })
     } catch (error) {
         console.error(error)
-        throw new Error(error)
+        return res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -96,12 +105,7 @@ export const loginUser = async (req, res) => {
 
         const token = await generateToken(existingUser._id)
 
-        res.cookie("token", token, {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax",
-            maxAge: 7 * 24 * 60 * 60 * 1000
-        })
+        res.cookie("token", token, cookieOptions)
 
         return res.status(200).json({
             message: "User logged in successfully!",
@@ -109,16 +113,12 @@ export const loginUser = async (req, res) => {
         })
     } catch (err) {
         console.error(err)
-        throw new Error(err)
+        return res.status(500).json({ message: "Internal server error" })
     }
 }
 
 export const logoutUser = async (req, res) => {
-    res.clearCookie("token", {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax"
-    });
+    res.clearCookie("token", clearCookieOptions);
     return res.status(200).json({ message: "Logged out successfully." });
 };
 
@@ -138,7 +138,7 @@ export const getProfile = async (req, res) => {
         })
     } catch (err) {
         console.error(err)
-        throw new Error(err)
+        return res.status(500).json({ message: "Internal server error" })
     }
 }
 
@@ -245,7 +245,7 @@ export const resetPassword = async (req, res) => {
         user.resetPasswordOtpExpires = undefined
         await user.save()
 
-        res.clearCookie("token")
+        res.clearCookie("token", clearCookieOptions)
 
         return res.status(200).json({
             message: "Password reset successfully. Please login with your new password."
@@ -292,11 +292,7 @@ export const deleteProfile = async (req, res) => {
 
         await userModel.findByIdAndDelete(req.userId)
 
-        res.clearCookie("token", {
-            httpOnly: true,
-            secure: process.env.NODE_ENV === "production",
-            sameSite: "lax"
-        })
+        res.clearCookie("token", clearCookieOptions)
 
         return res.status(200).json({
             message: "Profile deleted successfully."

@@ -5,12 +5,6 @@ import { getAvatarUrl } from "../utils/getAvatarUrl";
 
 const ROLES = ["Enthusiast", "Architect", "Student", "Firm"];
 
-const INTERESTS = [
-    "Minimalism", "Concrete", "Coastal", "Sustainable",
-    "Japanese-inspired", "Glass & Steel", "Timber & Warmth",
-    "Landscape", "Interiors", "Materials",
-];
-
 function AsteriskSpinner({ size = 16 }) {
     return (
         <svg
@@ -39,7 +33,6 @@ export default function EditProfileModal({ open, onClose }) {
         location: user?.location || "",
         website: user?.website || "",
     });
-    const [interests, setInterests] = useState(user?.interests || []);
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
 
@@ -47,12 +40,6 @@ export default function EditProfileModal({ open, onClose }) {
 
     const handleChange = (field) => (e) =>
         setForm((f) => ({ ...f, [field]: e.target.value }));
-
-    const toggleInterest = (tag) => {
-        setInterests((prev) =>
-            prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
-        );
-    };
 
     const handleSave = async () => {
         if (!form.username.trim()) {
@@ -63,7 +50,7 @@ export default function EditProfileModal({ open, onClose }) {
         setSaving(true);
 
         try {
-            await updateProfile({ ...form, interests });
+            await updateProfile(form);
             onClose();
         } catch (err) {
             setError("Something went wrong saving your changes. Try again.");
@@ -93,6 +80,7 @@ export default function EditProfileModal({ open, onClose }) {
                 </div>
 
                 <div className="px-6 py-6">
+                    {/* Avatar — generated automatically, no upload control at all */}
                     <div className="mb-7 flex flex-col items-center">
                         <div className="h-20 w-20 overflow-hidden rounded-full border border-stone-700 bg-[#141210]">
                             {user?._id && (
@@ -159,28 +147,6 @@ export default function EditProfileModal({ open, onClose }) {
                             rows={2}
                             className="w-full resize-none rounded-lg border border-stone-700 bg-transparent px-3.5 py-2.5 text-sm text-stone-100 outline-none transition focus:border-orange-600"
                         />
-                    </div>
-
-                    <div className="mb-2">
-                        <label className="mb-2 block text-xs text-stone-400">Interests</label>
-                        <div className="flex flex-wrap gap-2">
-                            {INTERESTS.map((tag) => {
-                                const selected = interests.includes(tag);
-                                return (
-                                    <button
-                                        key={tag}
-                                        type="button"
-                                        onClick={() => toggleInterest(tag)}
-                                        className={`rounded-full border px-3 py-1.5 text-xs transition ${selected
-                                                ? "border-orange-600 bg-orange-700/15 text-orange-400"
-                                                : "border-stone-700 text-stone-400 hover:border-stone-500 hover:text-stone-200"
-                                            }`}
-                                    >
-                                        {tag}
-                                    </button>
-                                );
-                            })}
-                        </div>
                     </div>
 
                     {error && <p className="mt-4 text-sm text-red-500">{error}</p>}

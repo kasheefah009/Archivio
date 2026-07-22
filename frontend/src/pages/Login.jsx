@@ -3,7 +3,6 @@ import { User, Lock, Eye, EyeOff } from "lucide-react";
 import { Link } from "react-router-dom"
 import { userStore } from "../store/useStore"
 import { useNavigate } from "react-router-dom";
-import { Toaster, toast } from "sonner";
 
 import Archivio1 from "../assets/Archivio 1.jpg";
 import Archivio2 from "../assets/Archivio 2.jpg";
@@ -135,22 +134,19 @@ export default function Login() {
         e.preventDefault();
         const validationErrors = validate();
         setErrors(validationErrors);
-        if (Object.keys(validationErrors).length === 0) {
-            console.log("Log in:", { ...form, rememberMe });
-        }
 
+        if (Object.keys(validationErrors).length > 0) return;
 
+        setIsLoading(true);
         try {
             await login(form);
-            toast.success("Login successful");
-            navigate("/")
+            navigate("/");
         } catch (err) {
-            toast.error("Login failed");
         } finally {
             setForm({
                 email: "",
                 password: ""
-            })
+            });
             setIsLoading(false);
         }
     }
@@ -237,7 +233,8 @@ export default function Login() {
                                         value={form.email}
                                         onChange={handleChange("email")}
                                         aria-invalid={!!errors.email}
-                                        className={`w-full rounded-lg border bg-transparent py-3 pl-11 pr-4 text-sm text-stone-100 placeholder-stone-500 outline-none transition focus:border-orange-600 ${errors.email ? "border-red-500" : "border-stone-700"
+                                        disabled={isLoading}
+                                        className={`w-full rounded-lg border bg-transparent py-3 pl-11 pr-4 text-sm text-stone-100 placeholder-stone-500 outline-none transition focus:border-orange-600 disabled:opacity-50 ${errors.email ? "border-red-500" : "border-stone-700"
                                             }`}
                                     />
                                 </div>
@@ -261,7 +258,8 @@ export default function Login() {
                                         value={form.password}
                                         onChange={handleChange("password")}
                                         aria-invalid={!!errors.password}
-                                        className={`w-full rounded-lg border bg-transparent py-3 pl-11 pr-11 text-sm text-stone-100 placeholder-stone-500 outline-none transition focus:border-orange-600 ${errors.password ? "border-red-500" : "border-stone-700"
+                                        disabled={isLoading}
+                                        className={`w-full rounded-lg border bg-transparent py-3 pl-11 pr-11 text-sm text-stone-100 placeholder-stone-500 outline-none transition focus:border-orange-600 disabled:opacity-50 ${errors.password ? "border-red-500" : "border-stone-700"
                                             }`}
                                     />
                                     <button
@@ -294,10 +292,14 @@ export default function Login() {
                             </div>
 
                             <button
-                                type="submit" onClick={handleSubmit}
-                                className="mt-2 w-full rounded-lg bg-orange-700 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 active:scale-[0.99]"
+                                type="submit"
+                                disabled={isLoading}
+                                className="mt-2 flex w-full items-center justify-center gap-2 rounded-lg bg-orange-700 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-70"
                             >
-                                {isLoading ? 'Logging in...' : 'Login'}
+                                {isLoading && (
+                                    <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/40 border-t-white" />
+                                )}
+                                {isLoading ? "Logging in..." : "Login"}
                             </button>
                         </form>
 
